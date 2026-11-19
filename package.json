@@ -1,0 +1,14 @@
+{
+  "name": "stroke-writing-tw",
+  "version": "1.0.0",
+  "description": "一年級基本筆畫名稱與寫法遊戲化練習網頁與 A4 學習單",
+  "scripts": {
+    "test": "node tools/test_judge.js",
+    "pdf": "node tools/make_pdf.js",
+    "verify": "node tools/verify_and_screenshot.js"
+  },
+  "dependencies": {
+    "pdf-lib": "^1.17.1",
+    "playwright": "^1.65.1"
+  }
+}

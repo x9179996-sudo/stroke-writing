@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>國小一年級 30 基本筆畫 幾何與中心線對照審閱 (debug.html)</title>
+  <style>
+    @font-face {
+      font-family: 'TW-Kai';
+      src: url('fonts/TW-Kai-98_1.ttf') format('truetype');
+      font-display: swap;
+    }
+    :root {
+      --bg: #F7FAFC;
+      --card-bg: #FFFFFF;
+      --text: #1A202C;
+      --muted: #4A5568;
+      --border: #E2E8F0;
+      --primary: #2B6CB0;
+      --green: #38A169;
+      --red: #E53E3E;
+      --orange: #DD6B20;
+      --purple: #805AD5;
+      --grid-line: rgba(229, 62, 62, 0.25);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      padding: 24px;
+      line-height: 1.5;
+    }
+    .header {
+      max-width: 1400px;
+      margin: 0 auto 24px;
+      background: var(--card-bg);
+      padding: 20px 24px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+    .header h1 {
+      font-size: 28px;
+      color: #1A365D;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .header p {
+      font-size: 16px;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      background: #EDF2F7;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .dot.start { background: var(--green); border: 2px solid #22543D; }
+    .dot.end { background: var(--red); border: 2px solid #742A2A; }
+    .dot.turn { background: var(--orange); border: 2px solid #7B341E; }
+    .dot.hook { background: #3182CE; border: 2px solid #2A4365; }
+
+    .filters {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #FFF;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .filter-btn.active {
+      background: var(--primary);
+      color: #FFF;
+      border-color: var(--primary);
+    }
+
+    .grid {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+      border-bottom: 1px solid #EDF2F7;
+      padding-bottom: 6px;
+    }
+    .stroke-id {
+      background: #EDF2F7;
+      color: #2D3748;
+      font-weight: 800;
+      font-size: 14px;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+    .stroke-name {
+      font-size: 24px;
+      font-weight: 900;
+      color: #2D3748;
+    }
+    .stroke-bpmf {
+      font-size: 15px;
+      color: var(--primary);
+      font-weight: 700;
+      margin-left: 6px;
+    }
+    .stroke-examples {
+      font-size: 15px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .stroke-examples span {
+      font-family: 'TW-Kai', "DFKai-SB", "BiauKai", serif;
+      font-size: 18px;
+      color: #1A202C;
+      font-weight: bold;
+      background: #FFF5F5;
+      padding: 1px 4px;
+      border-radius: 4px;
+      margin: 0 2px;
+    }
+
+    .svg-box {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background: #FFFDF9;
+      border-radius: 12px;
+      border: 2px solid #E2E8F0;
+      position: relative;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+    .svg-box svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: auto;
+    }
+    .action-btn {
+      flex: 1;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid #CBD5E0;
+      background: #F7FAFC;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: background 0.1s;
+    }
+    .action-btn:hover { background: #EDF2F7; }
+    .action-btn:active { transform: scale(0.98); }
+
+    .diff-badge {
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: #FEFCBF;
+      color: #744210;
+      font-weight: 700;
+      margin-top: 4px;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>國小一年級 30 基本筆畫 幾何與中心線對照審閱 (debug.html)</h1>
+    <p>嚴格依據學校《基本筆畫表》順序與教育部標準字體。本頁標示每個筆畫的骨架中心線、方向箭頭、綠色起點、紅色收點、拐角轉折與鉤尖，供與掃描檔逐一核對。</p>
+    
+    <div class="legend">
+      <span>標示說明：</span>
+      <span class="legend-item"><span class="dot start"></span> 綠色圓點：起筆（第 1 點）</span>
+      <span class="legend-item"><span class="dot end"></span> 紅色圓點：收筆（終點）</span>
+      <span class="legend-item"><span class="dot turn"></span> 橘色圓點：轉折／折角／重頓</span>
+      <span class="legend-item"><span class="dot hook"></span> 藍色圓點：鉤尖</span>
+      <span class="legend-item"><span style="color:#2B6CB0; font-weight:900;">➔</span> 箭頭：行筆方向</span>
+      <span class="legend-item"><span style="display:inline-block; width:18px; height:6px; background:#CBD5E0; border-radius:3px;"></span> 灰底：楷書筆形外廓</span>
+    </div>
+
+    <div class="filters" id="filters">
+      <button class="filter-btn active" data-zone="all">全部 30 個筆畫</button>
+      <button class="filter-btn" data-zone="1">第 1 區：基本六筆 (1–6)</button>
+      <button class="filter-btn" data-zone="2">第 2 區：轉折山丘 (7–11 含 8-1)</button>
+      <button class="filter-btn" data-zone="3">第 3 區：鉤鉤深潭 (12–17)</button>
+      <button class="filter-btn" data-zone="4">第 4 區：挑折秘境 (18–23)</button>
+      <button class="filter-btn" data-zone="5">第 5 區：蜿蜒神峰 (24–29)</button>
+    </div>
+  </div>
+
+  <div class="grid" id="strokeGrid"></div>
+
+  <script src="strokes.js"></script>
+  <script>
+    const STROKES = window.STROKES_DATA.STROKES;
+
+    function renderCard(s) {
+      let diffNote = "";
+      if (s.id === "8") diffNote = '<div class="diff-badge">與 8-1 豎曲不同：轉角為 90° 尖角</div>';
+      if (s.id === "8-1") diffNote = '<div class="diff-badge">與 8 豎折不同：轉折處為圓弧弧度</div>';
+      if (s.id === "19") diffNote = '<div class="diff-badge">與 20 撇挑不同：收筆為水平橫</div>';
+      if (s.id === "20") diffNote = '<div class="diff-badge">與 19 撇橫不同：折角後向右上斜挑</div>';
+      if (s.id === "21") diffNote = '<div class="diff-badge">與 29 橫折橫折不同：為兩折</div>';
+      if (s.id === "29") diffNote = '<div class="diff-badge">與 21 橫折橫不同：為三折（凹 vs 凸）</div>';
+      if (s.id === "9") diffNote = '<div class="diff-badge">鉤向：向左下方內側小鉤</div>';
+      if (s.id === "10") diffNote = '<div class="diff-badge">鉤向：向左上方踢起小鉤</div>';
+      if (s.id === "11") diffNote = '<div class="diff-badge">鉤向：朝正上方挺出小鉤</div>';
+      if (s.id === "12") diffNote = '<div class="diff-badge">鉤向：朝左上心窩挑起小鉤</div>';
+
+      const keyDots = s.keyPoints.map(kp => {
+        let col = "#DD6B20"; // turn
+        let strokeCol = "#7B341E";
+        let r = 3.6;
+        if (kp.type === "start") { col = "#38A169"; strokeCol = "#22543D"; r = 4.2; }
+        else if (kp.type === "end") { col = "#E53E3E"; strokeCol = "#742A2A"; r = 4.2; }
+        else if (kp.type === "hook") { col = "#3182CE"; strokeCol = "#2A4365"; r = 3.8; }
+        return `<circle cx="${kp.x}" cy="${kp.y}" r="${r}" fill="${col}" stroke="${strokeCol}" stroke-width="1.2"/>
+                <text x="${kp.x}" y="${kp.y - 5.5}" font-size="4" font-weight="900" fill="${strokeCol}" text-anchor="middle">${kp.label || ""}</text>`;
+      }).join("");
+
+      // Arrows along centerline
+      const pts = s.points;
+      let arrows = "";
+      for (let i = 0; i < pts.length - 1; i++) {
+        const p1 = pts[i], p2 = pts[i+1];
+        const mx = (p1[0] + p2[0]) / 2;
+        const my = (p1[1] + p2[1]) / 2;
+        const ang = Math.atan2(p2[1] - p1[1], p2[0] - p1[0]) * 180 / Math.PI;
+        arrows += `<g transform="translate(${mx}, ${my}) rotate(${ang})">
+          <polygon points="-2.5,-2 2.5,0 -2.5,2" fill="#2B6CB0" />
+        </g>`;
+      }
+
+      const pointsLine = pts.map(p => `${p[0]},${p[1]}`).join(" ");
+
+      return `
+        <div class="card" data-zone="${s.zone}">
+          <div class="card-top">
+            <div>
+              <span class="stroke-id">#${s.id}</span>
+              <span class="stroke-name">${s.name}</span>
+              <span class="stroke-bpmf">${s.bpmf}</span>
+            </div>
+            <span style="font-size:20px;">${s.spirit.avatar}</span>
+          </div>
+          <div class="stroke-examples">
+            例字：${s.examples.map(ex => `<span>${ex}</span>`).join(" ")}
+          </div>
+          ${diffNote}
+          <div class="svg-box">
+            <svg viewBox="0 0 100 100" id="svg_${s.id.replace('-', '_')}">
+              <defs>
+                <pattern id="grid_${s.id.replace('-', '_')}" width="100" height="100" patternUnits="userSpaceOnUse">
+                  <!-- 米字格背景 -->
+                  <rect width="100" height="100" fill="#FFFDF9" stroke="#E2E8F0" stroke-width="1"/>
+                  <line x1="0" y1="50" x2="100" y2="50" stroke="rgba(229, 62, 62, 0.25)" stroke-width="0.8" stroke-dasharray="2,2"/>
+                  <line x1="50" y1="0" x2="50" y2="100" stroke="rgba(229, 62, 62, 0.25)" stroke-width="0.8" stroke-dasharray="2,2"/>
+                  <line x1="0" y1="0" x2="100" y2="100" stroke="rgba(229, 62, 62, 0.15)" stroke-width="0.6" stroke-dasharray="3,3"/>
+                  <line x1="100" y1="0" x2="0" y2="100" stroke="rgba(229, 62, 62, 0.15)" stroke-width="0.6" stroke-dasharray="3,3"/>
+                </pattern>
+              </defs>
+              <rect width="100" height="100" fill="url(#grid_${s.id.replace('-', '_')})"/>
+
+              <!-- 楷書外形 (灰色半透明底) -->
+              <path d="${s.outlineD}" fill="rgba(74, 85, 104, 0.18)" stroke="rgba(74, 85, 104, 0.35)" stroke-width="0.6"/>
+
+              <!-- 中心骨架線 -->
+              <polyline points="${pointsLine}" fill="none" stroke="#2B6CB0" stroke-width="1.8" stroke-dasharray="2,1.5"/>
+
+              <!-- 方向箭頭 -->
+              ${arrows}
+
+              <!-- 動畫預備路徑 (預設隱藏) -->
+              <path class="anim-stroke" d="${s.centerD}" fill="none" stroke="#E53E3E" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="200" stroke-dashoffset="200" opacity="0"/>
+
+              <!-- 關鍵點標記 -->
+              ${keyDots}
+            </svg>
+          </div>
+          <div class="card-actions">
+            <button class="action-btn" onclick="playAnim('${s.id}')">▶ 動畫示範</button>
+            <button class="action-btn" onclick="speakStroke('${s.name}', '${s.speechText}')">🔊 朗讀</button>
+          </div>
+        </div>
+      `;
+    }
+
+    const grid = document.getElementById('strokeGrid');
+    grid.innerHTML = STROKES.map(renderCard).join('');
+
+    // Filter functionality
+    document.getElementById('filters').addEventListener('click', (e) => {
+      if (!e.target.classList.contains('filter-btn')) return;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      const zone = e.target.getAttribute('data-zone');
+      document.querySelectorAll('.card').forEach(card => {
+        if (zone === 'all' || card.getAttribute('data-zone') === zone) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+
+    // Stroke animation
+    function playAnim(id) {
+      const svgId = 'svg_' + id.replace('-', '_');
+      const svg = document.getElementById(svgId);
+      if (!svg) return;
+      const animPath = svg.querySelector('.anim-stroke');
+      if (!animPath) return;
+
+      const len = animPath.getTotalLength ? animPath.getTotalLength() : 120;
+      animPath.style.strokeDasharray = len;
+      animPath.style.strokeDashoffset = len;
+      animPath.style.opacity = '1';
+      animPath.style.transition = 'none';
+
+      requestAnimationFrame(() => {
+        animPath.style.transition = 'stroke-dashoffset 1.2s ease-in-out';
+        animPath.style.strokeDashoffset = '0';
+        setTimeout(() => {
+          animPath.style.transition = 'opacity 0.4s';
+          animPath.style.opacity = '0';
+        }, 1600);
+      });
+    }
+
+    // TTS speech
+    function speakStroke(name, text) {
+      if (!('speechSynthesis' in window)) {
+        alert(text);
+        return;
+      }
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'zh-TW';
+      u.rate = 0.9;
+      window.speechSynthesis.speak(u);
+    }
+  </script>
+</body>
+</html>

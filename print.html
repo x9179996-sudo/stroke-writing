@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <title>一年級國語基本筆畫 A4 練習單與連連看</title>
+  <style>
+    @font-face {
+      font-family: 'TW-Kai';
+      src: url('fonts/TW-Kai-98_1.ttf') format('truetype');
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'BpmfIansui';
+      src: url('fonts/BpmfIansui.woff2') format('woff2');
+      font-display: swap;
+    }
+
+    @page {
+      size: A4 portrait;
+      margin: 8mm 10mm;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #FFFFFF;
+      color: #1A202C;
+      font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      font-size: 14pt;
+      line-height: 1.25;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .no-print {
+      background: #EBF8FF;
+      border: 2px solid #3182CE;
+      padding: 12px 20px;
+      border-radius: 12px;
+      margin: 16px auto;
+      max-width: 800px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 16px;
+    }
+    .print-btn {
+      background: #3182CE;
+      color: white;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-weight: 800;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    @media print {
+      .no-print { display: none !important; }
+      body { background: transparent; }
+      .sheet-page { margin: 0 !important; box-shadow: none !important; page-break-after: always; }
+      .sheet-page:last-child { page-break-after: avoid; }
+    }
+
+    /* A4 單頁容器 */
+    .sheet-page {
+      width: 190mm;
+      height: 279mm;
+      margin: 0 auto 20px;
+      padding: 2mm 0;
+      background: #FFFFFF;
+      box-sizing: border-box;
+      position: relative;
+      page-break-after: always;
+      display: flex;
+      flex-direction: column;
+    }
+    .sheet-page:last-child {
+      page-break-after: avoid;
+    }
+
+    /* 頁首 */
+    .sheet-header {
+      border-bottom: 2px solid #2D3748;
+      padding-bottom: 3mm;
+      margin-bottom: 3mm;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .sheet-title {
+      font-size: 20pt;
+      font-weight: 900;
+      color: #1A365D;
+    }
+    .sheet-subtitle {
+      font-size: 12pt;
+      color: #4A5568;
+      font-weight: 700;
+    }
+    .student-info {
+      font-size: 14pt;
+      font-weight: 700;
+      color: #2D3748;
+      display: flex;
+      gap: 16px;
+    }
+
+    /* 描寫表格：每頁 10 列 */
+    .practice-table {
+      width: 100%;
+      border-collapse: collapse;
+      flex: 1;
+    }
+    .practice-table th {
+      background: #F7FAFC;
+      border: 1.5px solid #4A5568;
+      padding: 3px 2px;
+      font-size: 12pt;
+      font-weight: 800;
+      color: #2D3748;
+      text-align: center;
+    }
+    .practice-table td {
+      border: 1.5px solid #718096;
+      padding: 2px;
+      text-align: center;
+      vertical-align: middle;
+      height: 24.5mm; /* 10 列約 24.5mm，確保整頁填滿無溢出 */
+    }
+
+    .col-id { width: 10mm; font-weight: 800; font-size: 13pt; }
+    .col-name { width: 34mm; }
+    .col-demo { width: 25mm; }
+    .col-trace { width: 25mm; }
+    .col-blank { width: 25mm; }
+    .col-examples { width: 21mm; }
+
+    /* 筆畫名稱加注音：規格至少 16pt */
+    .stroke-name-ruby {
+      font-size: 19pt;
+      font-weight: 900;
+      color: #1A202C;
+      line-height: 1.1;
+    }
+    .stroke-name-ruby rt {
+      font-size: 10pt;
+      font-weight: 700;
+      color: #2B6CB0;
+    }
+
+    /* 田字格/米字格：規格至少 2.2cm 見方 (22mm) */
+    .tian-grid {
+      width: 23mm;
+      height: 23mm;
+      margin: 0 auto;
+      display: block;
+    }
+
+    .example-text {
+      font-family: 'TW-Kai', "DFKai-SB", serif;
+      font-size: 18pt;
+      font-weight: 900;
+      color: #1A202C;
+      letter-spacing: 2px;
+    }
+
+    /* 頁尾 */
+    .sheet-footer {
+      border-top: 1px solid #CBD5E0;
+      padding-top: 2mm;
+      margin-top: 2mm;
+      display: flex;
+      justify-content: space-between;
+      font-size: 10pt;
+      color: #718096;
+    }
+
+    /* 配對頁連連看 */
+    .matching-box {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 6mm;
+      flex: 1;
+      gap: 30mm;
+      padding: 0 10mm;
+    }
+    .match-col {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      width: 60mm;
+    }
+    .match-item-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .match-item-right {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+    .match-num {
+      width: 8mm;
+      height: 8mm;
+      border-radius: 50%;
+      background: #2B6CB0;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12pt;
+      font-weight: 900;
+    }
+    .match-letter {
+      width: 8mm;
+      height: 8mm;
+      border-radius: 50%;
+      background: #C53030;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12pt;
+      font-weight: 900;
+    }
+    .match-dot {
+      width: 4mm;
+      height: 4mm;
+      border-radius: 50%;
+      border: 2px solid #2D3748;
+      background: white;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="no-print">
+    <span>🖨️ <b>一年級筆畫學習單</b>（全套 5 頁：3 頁描寫單 + 1 頁連連看配對單 + 1 頁答案頁）</span>
+    <button class="print-btn" onclick="window.print()">立即列印 / 存為 PDF</button>
+  </div>
+
+  <div id="printRoot"></div>
+
+  <script src="strokes.js"></script>
+  <script>
+    const STROKES = window.STROKES_DATA.STROKES;
+
+    function renderSvgGrid(inner, isDemo = false, startDot = null, arrows = '') {
+      return `
+        <svg class="tian-grid" viewBox="0 0 100 100">
+          <rect width="100" height="100" fill="#FFFFFF" stroke="#A0AEC0" stroke-width="1.2"/>
+          <line x1="0" y1="50" x2="100" y2="50" stroke="#CBD5E0" stroke-width="0.8" stroke-dasharray="2,2"/>
+          <line x1="50" y1="0" x2="50" y2="100" stroke="#CBD5E0" stroke-width="0.8" stroke-dasharray="2,2"/>
+          <line x1="0" y1="0" x2="100" y2="100" stroke="#E2E8F0" stroke-width="0.6" stroke-dasharray="3,3"/>
+          <line x1="100" y1="0" x2="0" y2="100" stroke="#E2E8F0" stroke-width="0.6" stroke-dasharray="3,3"/>
+          ${inner}
+          ${startDot ? `<circle cx="${startDot[0]}" cy="${startDot[1]}" r="4.5" fill="#38A169" stroke="#22543D" stroke-width="1.2"/>` : ''}
+          ${arrows}
+        </svg>
+      `;
+    }
+
+    function generatePracticePages() {
+      let html = '';
+      const pages = [
+        { pageNum: 1, strokes: STROKES.slice(0, 10), title: '基本六筆與轉折筆畫 (一)' },
+        { pageNum: 2, strokes: STROKES.slice(10, 20), title: '鉤畫與頓點筆畫 (二)' },
+        { pageNum: 3, strokes: STROKES.slice(20, 30), title: '複合曲折與神峰筆畫 (三)' }
+      ];
+
+      pages.forEach(p => {
+        const rows = p.strokes.map(s => {
+          // 示範格：黑色楷書外廓 + 綠色起點 + 箭頭
+          const sDot = s.points[0];
+          const pts = s.points;
+          let arrows = '';
+          for (let i = 0; i < pts.length - 1; i++) {
+            const p1 = pts[i], p2 = pts[i+1];
+            const mx = (p1[0] + p2[0]) / 2, my = (p1[1] + p2[1]) / 2;
+            const ang = Math.atan2(p2[1] - p1[1], p2[0] - p1[0]) * 180 / Math.PI;
+            arrows += `<g transform="translate(${mx}, ${my}) rotate(${ang})"><polygon points="-2,-1.6 2,0 -2,1.6" fill="#C53030"/></g>`;
+          }
+
+          const demoSvg = renderSvgGrid(
+            `<path d="${s.outlineD}" fill="#1A202C"/>`,
+            true, sDot, arrows
+          );
+
+          // 描紅 3 格：淡灰色描紅
+          const traceSvg = renderSvgGrid(`<path d="${s.outlineD}" fill="#CBD5E0"/>`, false, sDot);
+
+          // 空白 2 格：僅淡格
+          const blankSvg = renderSvgGrid('', false);
+
+          return `
+            <tr>
+              <td class="col-id">${s.id}</td>
+              <td class="col-name">
+                <div class="stroke-name-ruby">
+                  <ruby>${s.name}<rt>${s.bpmf}</rt></ruby>
+                </div>
+              </td>
+              <td class="col-demo">${demoSvg}</td>
+              <td class="col-trace">${traceSvg}</td>
+              <td class="col-trace">${traceSvg}</td>
+              <td class="col-trace">${traceSvg}</td>
+              <td class="col-blank">${blankSvg}</td>
+              <td class="col-blank">${blankSvg}</td>
+              <td class="col-examples"><span class="example-text">${s.examples.slice(0, 2).join(' ')}</span></td>
+            </tr>
+          `;
+        }).join('');
+
+        html += `
+          <div class="sheet-page">
+            <div class="sheet-header">
+              <div>
+                <div class="sheet-title">國小一年級 基本筆畫練習單</div>
+                <div class="sheet-subtitle">${p.title}</div>
+              </div>
+              <div class="student-info">
+                <span>班級：＿＿＿＿</span>
+                <span>座號：＿＿</span>
+                <span>姓名：＿＿＿＿＿＿</span>
+              </div>
+            </div>
+
+            <table class="practice-table">
+              <thead>
+                <tr>
+                  <th class="col-id">編號</th>
+                  <th class="col-name">筆畫名稱</th>
+                  <th class="col-demo">示範筆畫</th>
+                  <th colspan="3">描紅練習 (3格)</th>
+                  <th colspan="2">自行書寫 (2格)</th>
+                  <th class="col-examples">例字</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rows}
+              </tbody>
+            </table>
+
+            <div class="sheet-footer">
+              <span>說明：從綠色圓點起筆，順著箭頭方向書寫。</span>
+              <span>第 ${p.pageNum} 頁，共 5 頁</span>
+            </div>
+          </div>
+        `;
+      });
+
+      return html;
+    }
+
+    // 第 4 頁：連連看配對頁 (每區抽 2 題，共 10 題)
+    // 嚴格依據 5 個區各抽 2 題：
+    // Zone 1: 1 橫, 4 撇
+    // Zone 2: 7 橫折, 10 豎鉤
+    // Zone 3: 12 臥鉤, 15 撇頓點
+    // Zone 4: 18 豎挑, 21 橫折橫
+    // Zone 5: 24 豎曲鉤, 27 橫撇橫折鉤
+    const MATCH_IDS = ["1", "4", "7", "10", "12", "15", "18", "21", "24", "27"];
+    const matchStrokes = MATCH_IDS.map(id => STROKES.find(s => s.id === id));
+
+    // 打亂右側順序 (固定種子打亂以便印出答案)
+    const SHUFFLED_NAMES = [
+      { letter: "A", stroke: matchStrokes[4] }, // 12 臥鉤
+      { letter: "B", stroke: matchStrokes[0] }, // 1 橫
+      { letter: "C", stroke: matchStrokes[7] }, // 21 橫折橫
+      { letter: "D", stroke: matchStrokes[2] }, // 7 橫折
+      { letter: "E", stroke: matchStrokes[9] }, // 27 橫撇橫折鉤
+      { letter: "F", stroke: matchStrokes[1] }, // 4 撇
+      { letter: "G", stroke: matchStrokes[6] }, // 18 豎挑
+      { letter: "H", stroke: matchStrokes[3] }, // 10 豎鉤
+      { letter: "I", stroke: matchStrokes[8] }, // 24 豎曲鉤
+      { letter: "J", stroke: matchStrokes[5] }  // 15 撇頓點
+    ];
+
+    function generateMatchingPage() {
+      const leftItems = matchStrokes.map((s, idx) => `
+        <div class="match-item-left">
+          <span class="match-num">${idx + 1}</span>
+          <svg style="width:18mm; height:18mm; border:1.5px solid #CBD5E0; border-radius:6px; background:#FAF7F0;" viewBox="0 0 100 100">
+            <path d="${s.outlineD}" fill="#1E3A5F"/>
+          </svg>
+          <span style="font-size:12pt; color:#718096; font-weight:700;">(例字：${s.examples[0]})</span>
+          <span class="match-dot" style="margin-left:auto;"></span>
+        </div>
+      `).join('');
+
+      const rightItems = SHUFFLED_NAMES.map(item => `
+        <div class="match-item-right">
+          <span class="match-dot" style="margin-right:auto;"></span>
+          <span class="stroke-name-ruby" style="font-size:18pt;">
+            <ruby>${item.stroke.name}<rt>${item.stroke.bpmf}</rt></ruby>
+          </span>
+          <span class="match-letter">${item.letter}</span>
+        </div>
+      `).join('');
+
+      return `
+        <div class="sheet-page">
+          <div class="sheet-header">
+            <div>
+              <div class="sheet-title">國小一年級 基本筆畫連連看測驗單</div>
+              <div class="sheet-subtitle">配對挑戰：請用尺把左邊的筆畫連到右邊正確的名稱！</div>
+            </div>
+            <div class="student-info">
+              <span>班級：＿＿＿＿</span>
+              <span>姓名：＿＿＿＿＿＿</span>
+              <span>得分：＿＿＿＿</span>
+            </div>
+          </div>
+
+          <div style="background:#EDF2F7; padding:2mm 4mm; border-radius:6px; font-size:12pt; font-weight:700; margin-bottom:4mm; color:#2D3748;">
+            題目說明：每題 10 分，共 10 題。觀察筆畫形狀與轉折特徵，連至右側對應的名稱。
+          </div>
+
+          <div class="matching-box">
+            <div class="match-col">${leftItems}</div>
+            <div class="match-col">${rightItems}</div>
+          </div>
+
+          <div class="sheet-footer">
+            <span>挑戰完成後請家長或老師簽名：＿＿＿＿＿＿＿＿</span>
+            <span>第 4 頁，共 5 頁</span>
+          </div>
+        </div>
+      `;
+    }
+
+    // 第 5 頁：解答頁
+    function generateAnswerKeyPage() {
+      // 計算連連看配對答案
+      const answerPairs = matchStrokes.map((s, idx) => {
+        const found = SHUFFLED_NAMES.find(n => n.stroke.id === s.id);
+        return { num: idx + 1, letter: found.letter, name: s.name, bpmf: s.bpmf, id: s.id };
+      });
+
+      const answerCards = answerPairs.map(a => `
+        <div style="background:#F7FAFC; border:1.5px solid #CBD5E0; border-radius:8px; padding:3mm 4mm; display:flex; align-items:center; justify-content:space-between;">
+          <span style="font-weight:900; font-size:14pt; color:#2B6CB0;">題號 ${a.num}</span>
+          <span style="font-size:16pt; font-weight:900; color:#1A202C;">➔ 選項 [ ${a.letter} ]</span>
+          <span style="font-size:15pt; font-weight:800; color:#4A5568;">${a.name} (${a.bpmf})</span>
+        </div>
+      `).join('');
+
+      return `
+        <div class="sheet-page">
+          <div class="sheet-header">
+            <div>
+              <div class="sheet-title">國小一年級 基本筆畫學習單【教師與家長參考解答】</div>
+              <div class="sheet-subtitle">第 4 頁連連看配對單標準答案與審閱對照表</div>
+            </div>
+            <div class="student-info">
+              <span>教學審閱專用</span>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:4mm; margin-top:4mm; margin-bottom:6mm;">
+            ${answerCards}
+          </div>
+
+          <div style="background:#FFF5F5; border:2px solid #FEB2B2; border-radius:12px; padding:4mm; margin-top:auto;">
+            <div style="font-weight:900; font-size:14pt; color:#9B2C2C; margin-bottom:2mm;">🔍 易混淆筆畫教學指導要點：</div>
+            <ul style="font-size:11pt; color:#742A2A; line-height:1.6; margin-left:5mm;">
+              <li><b>豎折 vs 豎曲</b>：豎折（#8 匠）轉折處為直角 90° 尖角；豎曲（#8-1 匹）轉彎處為滑順圓弧，不可出現稜角。</li>
+              <li><b>撇橫 vs 撇挑</b>：撇橫（#19 母）轉折後為水平橫；撇挑（#20 紅）轉折後為向右上斜挑出尖角。</li>
+              <li><b>橫折橫 vs 橫折橫折</b>：橫折橫（#21 凹）為兩次轉折；橫折橫折（#29 凸）為三次轉折。</li>
+              <li><b>鉤畫方向</b>：橫鉤朝左下、豎鉤朝左上、斜鉤朝正上、臥鉤朝左上心窩。</li>
+            </ul>
+          </div>
+
+          <div class="sheet-footer">
+            <span>© 2026 國小基本筆畫教學系統</span>
+            <span>第 5 頁，共 5 頁（答案頁）</span>
+          </div>
+        </div>
+      `;
+    }
+
+    const root = document.getElementById('printRoot');
+    root.innerHTML = generatePracticePages() + generateMatchingPage() + generateAnswerKeyPage();
+  </script>
+</body>
+</html>
