@@ -17,7 +17,7 @@
 
     @page {
       size: A4 portrait;
-      margin: 8mm 10mm;
+      margin: 8mm 9.5mm;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -61,9 +61,9 @@
       .sheet-page:last-child { page-break-after: avoid; }
     }
 
-    /* A4 單頁容器 (190mm × 279mm) */
+    /* A4 單頁容器 (191mm × 279mm) */
     .sheet-page {
-      width: 190mm;
+      width: 191mm;
       height: 279mm;
       margin: 0 auto 20px;
       padding: 2mm 0;
@@ -123,7 +123,7 @@
       display: inline-block;
     }
 
-    /* 描寫表格：每頁 10 列 */
+    /* 描寫表格：每頁 10 列，總寬 190.5mm */
     .practice-table {
       width: 100%;
       border-collapse: collapse;
@@ -146,44 +146,68 @@
       text-align: center;
       vertical-align: middle;
       height: 24.5mm;
+      box-sizing: border-box;
     }
 
+    /* 欄位寬度嚴格規劃：8 + 37 + 22.5 + 67.5 + 22.5 + 33 = 190.5mm */
     .col-id { width: 8mm; font-weight: 800; font-size: 12pt; }
-    .col-name { width: 28mm; }
-    .col-demo { width: 22.3mm; }
-    .col-trace { width: 22.3mm; }
-    .col-blank { width: 22.3mm; }
-    .col-examples { width: 20.5mm; }
+    .col-name {
+      width: 37mm;
+      padding: 1px 2px;
+      vertical-align: middle;
+      text-align: center;
+      overflow: hidden;
+    }
+    .col-demo { width: 22.5mm; }
+    .col-trace { width: 22.5mm; }
+    .col-blank { width: 22.5mm; }
+    .col-examples {
+      width: 33mm;
+      padding-left: 2mm;
+      text-align: left;
+      vertical-align: middle;
+      box-sizing: border-box;
+    }
 
-    /* 筆畫名稱加注音：規格至少 16pt */
+    /* 筆畫名稱加注音：規格字級維持 ≥16pt (16.5pt) */
     .stroke-name-ruby {
       font-size: 16.5pt;
       font-weight: 900;
       color: #1A202C;
-      line-height: 1.1;
-      white-space: nowrap;
+      line-height: 1.15;
+      display: inline-block;
+      max-width: 100%;
+      box-sizing: border-box;
     }
     .stroke-name-ruby rt {
       font-size: 8.5pt;
       font-weight: 700;
       color: #2B6CB0;
     }
+    .stroke-name-ruby .ruby-line {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      white-space: nowrap;
+    }
 
-    /* 田字格/米字格：規格至少 2.2cm 見方 (22.3mm = 2.23cm) */
+    /* 田字格/米字格：規格至少 2.2cm 見方 (22.5mm = 2.25cm) */
     .tian-grid {
-      width: 22.3mm;
-      height: 22.3mm;
+      width: 22.5mm;
+      height: 22.5mm;
       margin: 0 auto;
       display: block;
     }
 
+    /* 例字字級規格 ≥ 20pt (20pt)，完整顯示 3 字且右側留白 ≥ 2mm */
     .example-text {
       font-family: 'TW-Kai', "DFKai-SB", serif;
-      font-size: 14pt;
+      font-size: 20pt;
       font-weight: 900;
       color: #1A202C;
-      letter-spacing: 1px;
+      letter-spacing: 0px;
       white-space: nowrap;
+      display: inline-block;
     }
 
     /* 頁尾 */
@@ -287,8 +311,38 @@
 
   <script src="strokes.js"></script>
   <script>
-    const STROKES = window.STROKES_DATA.STROKES;
+    // 取得資料並針對 #11 斜鉤在學習單中特別補強為標準楷書粗細 (對齊 #1 橫 與 #6 挑)
+    const STROKES = window.STROKES_DATA.STROKES.map(s => {
+      if (s.id === '11') {
+        return {
+          ...s,
+          outlineD: "M 24,16 C 22,9 35,10 38,17 C 51,41 68,62 84,81 C 86,84 85,78 84,72 L 83,58 C 82,53 74,53 74,60 L 71,71 C 53,51 38,33 26,19 C 23,16 22,18 23,16 Z"
+        };
+      }
+      return s;
+    });
 
+    // 格式化名稱加注音：名稱維持 >=16pt，太長則分兩行，完全防止截斷
+    function formatStrokeRuby(s) {
+      const chars = s.name.split('');
+      const bpList = s.bpmf.split(' ');
+      if (chars.length <= 3) {
+        const rubies = chars.map((c, i) => `<ruby>${c}<rt>${bpList[i] || ''}</rt></ruby>`).join('');
+        return `<div class="ruby-line">${rubies}</div>`;
+      } else if (chars.length === 4) {
+        // 例如：豎橫折鉤 -> 豎橫 / 折鉤；橫折橫折 -> 橫折 / 橫折
+        const l1 = chars.slice(0, 2).map((c, i) => `<ruby>${c}<rt>${bpList[i] || ''}</rt></ruby>`).join('');
+        const l2 = chars.slice(2, 4).map((c, i) => `<ruby>${c}<rt>${bpList[i+2] || ''}</rt></ruby>`).join('');
+        return `<div class="ruby-line">${l1}</div><div class="ruby-line" style="margin-top:-2px;">${l2}</div>`;
+      } else if (chars.length === 5) {
+        // 例如：橫撇橫折鉤 -> 橫撇 / 橫折鉤
+        const l1 = chars.slice(0, 2).map((c, i) => `<ruby>${c}<rt>${bpList[i] || ''}</rt></ruby>`).join('');
+        const l2 = chars.slice(2, 5).map((c, i) => `<ruby>${c}<rt>${bpList[i+2] || ''}</rt></ruby>`).join('');
+        return `<div class="ruby-line">${l1}</div><div class="ruby-line" style="margin-top:-2px;">${l2}</div>`;
+      }
+    }
+
+    // 渲染米字格 SVG：筆畫群組內縮 0.85 縮放，嚴格保留四周各至少 8% 邊距，防止被格線切斷
     function renderSvgGrid(inner, isDemo = false, startDot = null, arrows = '') {
       return `
         <svg class="tian-grid" viewBox="0 0 100 100">
@@ -297,9 +351,11 @@
           <line x1="50" y1="0" x2="50" y2="100" stroke="#CBD5E0" stroke-width="0.8" stroke-dasharray="2,2"/>
           <line x1="0" y1="0" x2="100" y2="100" stroke="#E2E8F0" stroke-width="0.6" stroke-dasharray="3,3"/>
           <line x1="100" y1="0" x2="0" y2="100" stroke="#E2E8F0" stroke-width="0.6" stroke-dasharray="3,3"/>
-          ${inner}
-          ${startDot ? `<circle cx="${startDot[0]}" cy="${startDot[1]}" r="4.5" fill="#38A169" stroke="#22543D" stroke-width="1.2"/>` : ''}
-          ${arrows}
+          <g transform="translate(50, 50) scale(0.85) translate(-50, -50)">
+            ${inner}
+            ${startDot ? `<circle cx="${startDot[0]}" cy="${startDot[1]}" r="4.2" fill="#38A169" stroke="#22543D" stroke-width="1.2"/>` : ''}
+            ${arrows}
+          </g>
         </svg>
       `;
     }
@@ -333,7 +389,7 @@
           // 描紅 3 格：淡灰色描紅
           const traceSvg = renderSvgGrid(`<path d="${s.outlineD}" fill="#CBD5E0"/>`, false, sDot);
 
-          // 空白 2 格：僅淡格
+          // 自行書寫 1 格：僅淡格
           const blankSvg = renderSvgGrid('', false);
 
           return `
@@ -341,14 +397,13 @@
               <td class="col-id">${s.id}</td>
               <td class="col-name">
                 <div class="stroke-name-ruby">
-                  <ruby>${s.name}<rt>${s.bpmf}</rt></ruby>
+                  ${formatStrokeRuby(s)}
                 </div>
               </td>
               <td class="col-demo">${demoSvg}</td>
               <td class="col-trace">${traceSvg}</td>
               <td class="col-trace">${traceSvg}</td>
               <td class="col-trace">${traceSvg}</td>
-              <td class="col-blank">${blankSvg}</td>
               <td class="col-blank">${blankSvg}</td>
               <td class="col-examples"><span class="example-text">${s.examples.join(' ')}</span></td>
             </tr>
@@ -376,7 +431,7 @@
                   <th class="col-name">筆畫名稱</th>
                   <th class="col-demo">示範筆畫</th>
                   <th colspan="3">描紅練習 (3格)</th>
-                  <th colspan="2">自行書寫 (2格)</th>
+                  <th class="col-blank">自行書寫 (1格)</th>
                   <th class="col-examples">例字</th>
                 </tr>
               </thead>
@@ -419,7 +474,9 @@
         <div class="match-item-left">
           <span class="match-num">${idx + 1}</span>
           <svg style="width:17mm; height:17mm; border:1.5px solid #CBD5E0; border-radius:6px; background:#FAF7F0; flex-shrink:0;" viewBox="0 0 100 100">
-            <path d="${s.outlineD}" fill="#1E3A5F"/>
+            <g transform="translate(50, 50) scale(0.85) translate(-50, -50)">
+              <path d="${s.outlineD}" fill="#1E3A5F"/>
+            </g>
           </svg>
           <span style="font-size:11pt; color:#4A5568; font-weight:700;">(例字：${s.examples[0]})</span>
           <span class="match-dot" style="margin-left:auto;"></span>
