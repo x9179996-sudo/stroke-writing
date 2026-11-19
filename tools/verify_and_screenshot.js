@@ -48,9 +48,12 @@ const { chromium } = require('playwright');
     const strokeTitleFs = parseFloat(window.getComputedStyle(document.querySelector('.stroke-title') || document.body).fontSize);
     
     // 量測畫面上所有可見按鈕的最小高度
-    const btns = Array.from(document.querySelectorAll('button.btn, a.btn'));
-    const btnHeights = btns.map(b => parseFloat(window.getComputedStyle(b).minHeight || b.offsetHeight));
-    const minBtnHeight = Math.min(...btnHeights);
+    const btns = Array.from(document.querySelectorAll('button.btn, a.btn')).filter(b => b.offsetWidth > 0 && b.offsetHeight > 0);
+    const btnHeights = btns.map(b => {
+      const mh = parseFloat(window.getComputedStyle(b).minHeight);
+      return (!isNaN(mh) && mh > 0) ? mh : b.offsetHeight;
+    });
+    const minBtnHeight = btnHeights.length > 0 ? Math.min(...btnHeights) : 64;
 
     const canvasWrap = document.querySelector('.canvas-wrapper');
     const canvasRect = canvasWrap ? { width: canvasWrap.offsetWidth, height: canvasWrap.offsetHeight } : null;

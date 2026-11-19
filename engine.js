@@ -149,8 +149,8 @@
       const denseUser = Math2D.densify(rawPoints, 1.2);
       const userLen = Math2D.length(denseUser);
 
-      // 檢查使用者長度是否過短
-      if (userLen < totalLen * 0.45) {
+      // 檢查使用者長度是否過短 (至少需達到 70% 長度)
+      if (userLen < totalLen * 0.70) {
         return {
           ok: false,
           reason: 'short',
@@ -185,15 +185,19 @@
       }
 
       // 關鍵轉折點檢查：如果有 turn 或 hook 點，必須被經過
-      const turns = (strokeDef.keyPoints || []).filter(k => k.type === 'turn' || k.type === 'hook');
-      for (const t of turns) {
-        const tNear = Math2D.nearest([t.x, t.y], denseUser);
-        if (tNear.dist > trackTol * 1.5) {
-          return {
-            ok: false,
-            reason: 'turn',
-            msg: `轉彎的地方「${t.label || ''}」還沒到喔，要沿著虛線轉彎！`
-          };
+      // 容許值收緊到約 8.0 單位 (約格子寬度 8%)，捺接近直線可例外
+      if (strokeDef.name !== '捺') {
+        const turnTol = options.turnTol || 8.0;
+        const turns = (strokeDef.keyPoints || []).filter(k => k.type === 'turn' || k.type === 'hook');
+        for (const t of turns) {
+          const tNear = Math2D.nearest([t.x, t.y], denseUser);
+          if (tNear.dist > turnTol) {
+            return {
+              ok: false,
+              reason: 'turn',
+              msg: `轉彎的地方「${t.label || ''}」還沒到喔，要沿著虛線轉彎！`
+            };
+          }
         }
       }
 
@@ -201,12 +205,12 @@
       let offCount = 0;
       for (let i = 0; i < denseUser.length; i++) {
         const d = Math2D.distToPolyline(denseUser[i], center);
-        if (d > trackTol * 1.4) {
+        if (d > trackTol * 1.2) {
           offCount++;
         }
       }
       const offRatio = offCount / denseUser.length;
-      if (offRatio > 0.20) {
+      if (offRatio > 0.15) {
         return {
           ok: false,
           reason: 'off',
@@ -225,7 +229,6 @@
       }
 
       // 全部合格！
-      // 計算品質評分 (0~100)
       const avgDist = denseUser.reduce((acc, p) => acc + Math2D.distToPolyline(p, center), 0) / denseUser.length;
       const score = Math.max(60, Math.min(100, Math.round(100 - avgDist * 3.5)));
 

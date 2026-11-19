@@ -6,7 +6,7 @@
   <style>
     @font-face {
       font-family: 'TW-Kai';
-      src: url('fonts/TW-Kai-98_1.ttf') format('truetype');
+      src: url('fonts/TW-Kai-Subset.woff2') format('woff2');
       font-display: swap;
     }
     @font-face {
@@ -61,7 +61,7 @@
       .sheet-page:last-child { page-break-after: avoid; }
     }
 
-    /* A4 單頁容器 */
+    /* A4 單頁容器 (190mm × 279mm) */
     .sheet-page {
       width: 190mm;
       height: 279mm;
@@ -78,159 +78,201 @@
       page-break-after: avoid;
     }
 
-    /* 頁首 */
+    /* 頁首：嚴格單行不換行，底線不斷開 */
     .sheet-header {
       border-bottom: 2px solid #2D3748;
-      padding-bottom: 3mm;
-      margin-bottom: 3mm;
+      padding-bottom: 2.5mm;
+      margin-bottom: 2.5mm;
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
+      white-space: nowrap;
+    }
+    .header-titles {
+      display: flex;
+      flex-direction: column;
+      gap: 1mm;
+      white-space: nowrap;
     }
     .sheet-title {
-      font-size: 20pt;
+      font-size: 18pt;
       font-weight: 900;
       color: #1A365D;
+      white-space: nowrap;
+      line-height: 1.15;
     }
     .sheet-subtitle {
-      font-size: 12pt;
+      font-size: 11pt;
       color: #4A5568;
       font-weight: 700;
+      white-space: nowrap;
+      line-height: 1.15;
     }
     .student-info {
-      font-size: 14pt;
+      font-size: 12.5pt;
       font-weight: 700;
       color: #2D3748;
       display: flex;
-      gap: 16px;
+      gap: 12px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      line-height: 1.15;
+    }
+    .student-info span {
+      white-space: nowrap;
+      display: inline-block;
     }
 
     /* 描寫表格：每頁 10 列 */
     .practice-table {
       width: 100%;
       border-collapse: collapse;
+      table-layout: fixed;
       flex: 1;
     }
     .practice-table th {
       background: #F7FAFC;
       border: 1.5px solid #4A5568;
-      padding: 3px 2px;
-      font-size: 12pt;
+      padding: 2px 1px;
+      font-size: 11pt;
       font-weight: 800;
       color: #2D3748;
       text-align: center;
+      white-space: nowrap;
     }
     .practice-table td {
       border: 1.5px solid #718096;
-      padding: 2px;
+      padding: 1px;
       text-align: center;
       vertical-align: middle;
-      height: 24.5mm; /* 10 列約 24.5mm，確保整頁填滿無溢出 */
+      height: 24.5mm;
     }
 
-    .col-id { width: 10mm; font-weight: 800; font-size: 13pt; }
-    .col-name { width: 34mm; }
-    .col-demo { width: 25mm; }
-    .col-trace { width: 25mm; }
-    .col-blank { width: 25mm; }
-    .col-examples { width: 21mm; }
+    .col-id { width: 8mm; font-weight: 800; font-size: 12pt; }
+    .col-name { width: 28mm; }
+    .col-demo { width: 22.3mm; }
+    .col-trace { width: 22.3mm; }
+    .col-blank { width: 22.3mm; }
+    .col-examples { width: 20.5mm; }
 
     /* 筆畫名稱加注音：規格至少 16pt */
     .stroke-name-ruby {
-      font-size: 19pt;
+      font-size: 16.5pt;
       font-weight: 900;
       color: #1A202C;
       line-height: 1.1;
+      white-space: nowrap;
     }
     .stroke-name-ruby rt {
-      font-size: 10pt;
+      font-size: 8.5pt;
       font-weight: 700;
       color: #2B6CB0;
     }
 
-    /* 田字格/米字格：規格至少 2.2cm 見方 (22mm) */
+    /* 田字格/米字格：規格至少 2.2cm 見方 (22.3mm = 2.23cm) */
     .tian-grid {
-      width: 23mm;
-      height: 23mm;
+      width: 22.3mm;
+      height: 22.3mm;
       margin: 0 auto;
       display: block;
     }
 
     .example-text {
       font-family: 'TW-Kai', "DFKai-SB", serif;
-      font-size: 18pt;
+      font-size: 14pt;
       font-weight: 900;
       color: #1A202C;
-      letter-spacing: 2px;
+      letter-spacing: 1px;
+      white-space: nowrap;
     }
 
     /* 頁尾 */
     .sheet-footer {
       border-top: 1px solid #CBD5E0;
-      padding-top: 2mm;
-      margin-top: 2mm;
+      padding-top: 1.8mm;
+      margin-top: 1.8mm;
       display: flex;
       justify-content: space-between;
-      font-size: 10pt;
+      font-size: 9.5pt;
       color: #718096;
+      white-space: nowrap;
     }
 
     /* 配對頁連連看 */
     .matching-box {
       display: flex;
       justify-content: space-between;
-      margin-top: 6mm;
+      margin-top: 4mm;
       flex: 1;
-      gap: 30mm;
-      padding: 0 10mm;
+      gap: 16mm;
+      padding: 0 4mm;
     }
     .match-col {
       display: flex;
       flex-direction: column;
       justify-content: space-around;
-      width: 60mm;
+    }
+    .match-col-left {
+      width: 76mm;
+    }
+    .match-col-right {
+      width: 90mm;
     }
     .match-item-left {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
+      height: 20.5mm;
+      white-space: nowrap;
     }
     .match-item-right {
       display: flex;
       align-items: center;
       justify-content: flex-end;
       gap: 8px;
+      height: 20.5mm;
+      white-space: nowrap;
     }
     .match-num {
-      width: 8mm;
-      height: 8mm;
+      width: 7.5mm;
+      height: 7.5mm;
+      min-width: 7.5mm;
+      min-height: 7.5mm;
       border-radius: 50%;
       background: #2B6CB0;
       color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 12pt;
+      font-size: 11pt;
       font-weight: 900;
+      flex-shrink: 0;
     }
     .match-letter {
-      width: 8mm;
-      height: 8mm;
+      width: 7.5mm;
+      height: 7.5mm;
+      min-width: 7.5mm;
+      min-height: 7.5mm;
       border-radius: 50%;
       background: #C53030;
       color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 12pt;
+      font-size: 11pt;
       font-weight: 900;
+      flex-shrink: 0;
+      margin-left: 4px;
     }
     .match-dot {
       width: 4mm;
       height: 4mm;
+      min-width: 4mm;
+      min-height: 4mm;
       border-radius: 50%;
-      border: 2px solid #2D3748;
-      background: white;
+      background: #2D3748;
+      flex-shrink: 0;
+      display: inline-block;
     }
   </style>
 </head>
@@ -280,7 +322,7 @@
             const p1 = pts[i], p2 = pts[i+1];
             const mx = (p1[0] + p2[0]) / 2, my = (p1[1] + p2[1]) / 2;
             const ang = Math.atan2(p2[1] - p1[1], p2[0] - p1[0]) * 180 / Math.PI;
-            arrows += `<g transform="translate(${mx}, ${my}) rotate(${ang})"><polygon points="-2,-1.6 2,0 -2,1.6" fill="#C53030"/></g>`;
+            arrows += `<g transform="translate(${mx}, ${my}) rotate(${ang})"><polygon points="-2.5,-2 2.5,0 -2.5,2" fill="#C53030"/></g>`;
           }
 
           const demoSvg = renderSvgGrid(
@@ -308,7 +350,7 @@
               <td class="col-trace">${traceSvg}</td>
               <td class="col-blank">${blankSvg}</td>
               <td class="col-blank">${blankSvg}</td>
-              <td class="col-examples"><span class="example-text">${s.examples.slice(0, 2).join(' ')}</span></td>
+              <td class="col-examples"><span class="example-text">${s.examples.join(' ')}</span></td>
             </tr>
           `;
         }).join('');
@@ -316,7 +358,7 @@
         html += `
           <div class="sheet-page">
             <div class="sheet-header">
-              <div>
+              <div class="header-titles">
                 <div class="sheet-title">國小一年級 基本筆畫練習單</div>
                 <div class="sheet-subtitle">${p.title}</div>
               </div>
@@ -355,16 +397,10 @@
     }
 
     // 第 4 頁：連連看配對頁 (每區抽 2 題，共 10 題)
-    // 嚴格依據 5 個區各抽 2 題：
-    // Zone 1: 1 橫, 4 撇
-    // Zone 2: 7 橫折, 10 豎鉤
-    // Zone 3: 12 臥鉤, 15 撇頓點
-    // Zone 4: 18 豎挑, 21 橫折橫
-    // Zone 5: 24 豎曲鉤, 27 橫撇橫折鉤
     const MATCH_IDS = ["1", "4", "7", "10", "12", "15", "18", "21", "24", "27"];
     const matchStrokes = MATCH_IDS.map(id => STROKES.find(s => s.id === id));
 
-    // 打亂右側順序 (固定種子打亂以便印出答案)
+    // 打亂右側順序 (固定順序以利解答核對)
     const SHUFFLED_NAMES = [
       { letter: "A", stroke: matchStrokes[4] }, // 12 臥鉤
       { letter: "B", stroke: matchStrokes[0] }, // 1 橫
@@ -382,10 +418,10 @@
       const leftItems = matchStrokes.map((s, idx) => `
         <div class="match-item-left">
           <span class="match-num">${idx + 1}</span>
-          <svg style="width:18mm; height:18mm; border:1.5px solid #CBD5E0; border-radius:6px; background:#FAF7F0;" viewBox="0 0 100 100">
+          <svg style="width:17mm; height:17mm; border:1.5px solid #CBD5E0; border-radius:6px; background:#FAF7F0; flex-shrink:0;" viewBox="0 0 100 100">
             <path d="${s.outlineD}" fill="#1E3A5F"/>
           </svg>
-          <span style="font-size:12pt; color:#718096; font-weight:700;">(例字：${s.examples[0]})</span>
+          <span style="font-size:11pt; color:#4A5568; font-weight:700;">(例字：${s.examples[0]})</span>
           <span class="match-dot" style="margin-left:auto;"></span>
         </div>
       `).join('');
@@ -393,7 +429,7 @@
       const rightItems = SHUFFLED_NAMES.map(item => `
         <div class="match-item-right">
           <span class="match-dot" style="margin-right:auto;"></span>
-          <span class="stroke-name-ruby" style="font-size:18pt;">
+          <span class="stroke-name-ruby" style="font-size:16.5pt;">
             <ruby>${item.stroke.name}<rt>${item.stroke.bpmf}</rt></ruby>
           </span>
           <span class="match-letter">${item.letter}</span>
@@ -403,24 +439,25 @@
       return `
         <div class="sheet-page">
           <div class="sheet-header">
-            <div>
+            <div class="header-titles">
               <div class="sheet-title">國小一年級 基本筆畫連連看測驗單</div>
               <div class="sheet-subtitle">配對挑戰：請用尺把左邊的筆畫連到右邊正確的名稱！</div>
             </div>
             <div class="student-info">
               <span>班級：＿＿＿＿</span>
+              <span>座號：＿＿</span>
               <span>姓名：＿＿＿＿＿＿</span>
-              <span>得分：＿＿＿＿</span>
+              <span>得分：＿＿</span>
             </div>
           </div>
 
-          <div style="background:#EDF2F7; padding:2mm 4mm; border-radius:6px; font-size:12pt; font-weight:700; margin-bottom:4mm; color:#2D3748;">
+          <div style="background:#EDF2F7; padding:2mm 4mm; border-radius:6px; font-size:11pt; font-weight:700; margin-bottom:3mm; color:#2D3748; white-space:nowrap;">
             題目說明：每題 10 分，共 10 題。觀察筆畫形狀與轉折特徵，連至右側對應的名稱。
           </div>
 
           <div class="matching-box">
-            <div class="match-col">${leftItems}</div>
-            <div class="match-col">${rightItems}</div>
+            <div class="match-col match-col-left">${leftItems}</div>
+            <div class="match-col match-col-right">${rightItems}</div>
           </div>
 
           <div class="sheet-footer">
@@ -433,7 +470,6 @@
 
     // 第 5 頁：解答頁
     function generateAnswerKeyPage() {
-      // 計算連連看配對答案
       const answerPairs = matchStrokes.map((s, idx) => {
         const found = SHUFFLED_NAMES.find(n => n.stroke.id === s.id);
         return { num: idx + 1, letter: found.letter, name: s.name, bpmf: s.bpmf, id: s.id };
@@ -441,16 +477,16 @@
 
       const answerCards = answerPairs.map(a => `
         <div style="background:#F7FAFC; border:1.5px solid #CBD5E0; border-radius:8px; padding:3mm 4mm; display:flex; align-items:center; justify-content:space-between;">
-          <span style="font-weight:900; font-size:14pt; color:#2B6CB0;">題號 ${a.num}</span>
-          <span style="font-size:16pt; font-weight:900; color:#1A202C;">➔ 選項 [ ${a.letter} ]</span>
-          <span style="font-size:15pt; font-weight:800; color:#4A5568;">${a.name} (${a.bpmf})</span>
+          <span style="font-weight:900; font-size:13pt; color:#2B6CB0;">題號 ${a.num}</span>
+          <span style="font-size:15pt; font-weight:900; color:#1A202C;">➔ 選項 [ ${a.letter} ]</span>
+          <span style="font-size:14pt; font-weight:800; color:#4A5568;">${a.name} (${a.bpmf})</span>
         </div>
       `).join('');
 
       return `
         <div class="sheet-page">
           <div class="sheet-header">
-            <div>
+            <div class="header-titles">
               <div class="sheet-title">國小一年級 基本筆畫學習單【教師與家長參考解答】</div>
               <div class="sheet-subtitle">第 4 頁連連看配對單標準答案與審閱對照表</div>
             </div>
@@ -464,8 +500,8 @@
           </div>
 
           <div style="background:#FFF5F5; border:2px solid #FEB2B2; border-radius:12px; padding:4mm; margin-top:auto;">
-            <div style="font-weight:900; font-size:14pt; color:#9B2C2C; margin-bottom:2mm;">🔍 易混淆筆畫教學指導要點：</div>
-            <ul style="font-size:11pt; color:#742A2A; line-height:1.6; margin-left:5mm;">
+            <div style="font-weight:900; font-size:13pt; color:#9B2C2C; margin-bottom:2mm;">🔍 易混淆筆畫教學指導要點：</div>
+            <ul style="font-size:10.5pt; color:#742A2A; line-height:1.6; margin-left:5mm;">
               <li><b>豎折 vs 豎曲</b>：豎折（#8 匠）轉折處為直角 90° 尖角；豎曲（#8-1 匹）轉彎處為滑順圓弧，不可出現稜角。</li>
               <li><b>撇橫 vs 撇挑</b>：撇橫（#19 母）轉折後為水平橫；撇挑（#20 紅）轉折後為向右上斜挑出尖角。</li>
               <li><b>橫折橫 vs 橫折橫折</b>：橫折橫（#21 凹）為兩次轉折；橫折橫折（#29 凸）為三次轉折。</li>

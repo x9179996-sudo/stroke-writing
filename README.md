@@ -20,12 +20,14 @@
 ├─ strokes.js                  ← 30 個基本筆畫幾何外廓、中心骨架點、注音、例字、小精靈資料庫
 ├─ engine.js                   ← 描寫判定演算法引擎 (起訖點半徑、順序檢查點、容許寬度、方向防呆)
 ├─ fonts/
-│  ├─ TW-Kai-98_1.ttf          ← 教育部標準楷書 (CNS11643 全字庫正楷體，供例字與筆形精準呈現)
+│  ├─ TW-Kai-Subset.woff2      ← 教育部標準楷書子集化字型 (使用 pyftsubset 產出，僅 88KB)
 │  ├─ TW-KAI-LICENSE.txt       ← 教育部楷書授權條款 (政府資料開放授權條款 v1.0 / SIL OFL 1.1)
 │  ├─ BpmfIansui.woff2         ← 帶注音開源字型 (芫荽注音字型)
 │  └─ BpmfIansui.ttf           
 ├─ tools/
 │  ├─ test_judge.js            ← Playwright 30×3 (90項) 自動化描寫判定測試腳本
+│  ├─ test_adversarial.js      ← 5 大防抄捷徑與極端擾動壓力測試腳本
+│  ├─ subset_font.py           ← 使用 fontTools pyftsubset 子集化楷書字型腳本
 │  ├─ make_pdf.js              ← Playwright 自動渲染 print.html 產生標準 A4 PDF 腳本
 │  ├─ verify_pdf.py            ← Python pypdf 讀取並檢驗 PDF 頁數與實際每頁尺寸腳本
 │  └─ verify_and_screenshot.js ← 自動化量測實際計算字級並擷取平板與 PDF 截圖腳本
@@ -85,10 +87,11 @@
 
 ## 字型授權資訊 (Font Licenses)
 
-1. **教育部標準楷書 (TW-Kai)**：
+1. **教育部標準楷書 (TW-Kai-Subset.woff2)**：
    - 來源：數位發展部 / 全字庫 CNS11643 (https://data.gov.tw/dataset/5961)
+   - 子集化 (Subsetting)：使用 `pyftsubset` 工具將原本 35.2MB 的完整字型檔子集化為 88KB 的 `.woff2` 格式，僅保留例字及頁面楷書所需之 178 個字元，使網頁與 PDF 載入極速輕量化。原 `TW-Kai-98_1.ttf` 已刪除。
    - 授權：政府資料開放授權條款第一版 (OGDL v1.0) 及 SIL Open Font License 1.1 (OFL-1.1)。
-   - 本專案已將完整授權宣告置於 `fonts/TW-KAI-LICENSE.txt`。
+   - 本專案已將完整授權宣告保留於 `fonts/TW-KAI-LICENSE.txt`。
 
 2. **芫荽注音字型 (BpmfIansui)**：
    - 授權：SIL Open Font License 1.1。
@@ -100,6 +103,14 @@
 - **執行描寫判斷 30×3 自動化測試**：
   ```bash
   node tools/test_judge.js
+  ```
+- **執行 5 大防作弊與捷徑壓力測試**：
+  ```bash
+  node tools/test_adversarial.js
+  ```
+- **執行楷書字型子集化**：
+  ```bash
+  python tools/subset_font.py
   ```
 - **生成 A4 學習單 PDF**：
   ```bash
