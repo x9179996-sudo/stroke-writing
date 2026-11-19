@@ -2,6 +2,11 @@
 
 專為台灣國小一年級學生設計的教育部標準 30 基本筆畫筆順書寫、語音朗讀、遊戲化收集小精靈練習網頁與 A4 可列印學習單全套資源。
 
+- 🌐 **線上體驗網址**：https://x9179996-sudo.github.io/stroke-writing/
+- 📋 **30 筆畫中心線對照審閱頁**：https://x9179996-sudo.github.io/stroke-writing/debug.html
+- 📄 **可列印 A4 學習單網頁**：https://x9179996-sudo.github.io/stroke-writing/print.html
+- 📑 **高品質向量 A4 學習單 PDF (全 5 頁)**：[筆畫學習單.pdf](筆畫學習單.pdf)
+
 ---
 
 ## 專案架構與檔案清單
